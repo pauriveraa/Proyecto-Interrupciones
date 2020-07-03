@@ -9,79 +9,68 @@
 
 \maketitle
 
-\section{Microprocesadores}
-Son  un circuito electrónico que actúa como Unidad Central de Proceso (CPU) de una computadora. Llamados por muchos como el “cerebro”. Es un circuito microscópico constituido por millones de transistores integrados en una única pieza plana de poco espesor. El microprocesador (micro) se encarga de realizar todas las operaciones de cálculo y de controlar lo que pasa en la computadora recibiendo información y dando órdenes para que los demás elementos trabajen.
-Se encarga de organizar y manejar todos los procesos tales como interpretar contenidos de las posiciones de la memoria RAM y memoria ROM, control de puertos, acceso a unidades de disco, ejecución de las instrucciones del software, entre otras.[1]
+\section{RESUMEN}
+In the following work we talk about interruptions at the microprocessor level, the way in which devices communicate with the processor through them to have assigned a single line capable of alerting the CPU when it is required to perform an operation, the types that exist. and its applications.
 
 
-\section{¿Qué es una interrupción en el contexto de los microprocesadores?
-}
+\section{OBJETIVOS}
+2.1 Identificar la utilidad del manejo de interrupciones. \\
+2.2 Reconocer los distintos tipos de interrupciones. \\
+2.3 Aplicar interrupciones a través de la plataforma arduino.
+
+
+\section{INTRODUCCIÓN}
+Dentro de la ciencia de la tecnología se estudia el tratamiento de la información y los sistemas que se encargan de su procesamiento. Uno de los mayores avances de la tecnología son las computadoras y  detrás de estos hay un mundo por explorar, y  en esta ocasión se hablará del uso de interrupciones que surgen de las necesidades que tienen los dispositivos periféricos de enviar información al procesador principal de un sistema de comunicación. Todos los dispositivos que deseen comunicarse con el procesador por medio de interrupciones deben tener asignada una línea única capaz de avisar al CPU cuando le requiere para realizar una operación. Esta línea se denomina IRQ y llegan al controlador de interrupciones que puede estar integrado en el procesador principal o ser un circuito separado conectado al mismo.[1]
+
+
+
+\section{	MICROPROCESADORES Y MICROCONTROLADORES}
+
+Los microprocesadores se han desarrollado fundamentalmente orientados al mercado de los ordenadores personales y las estaciones de trabajo, pues allí se requiere una elevada potencia de cálculo, el manejo de gran cantidad de memoria y una gran velocidad de procesamiento. Mientras que los microcontroladores están concebidos fundamentalmente para ser utilizados en aplicaciones puntuales, es decir, aplicaciones donde el microcontrolador debe realizar un pequeño número de tareas, al menor costo posible.[2]
+
+\section{DEFINICIÓN DE INTERRUPCIÓN}
+
 Una interrupción es un mecanismo que permite ejecutar un bloque de instrucciones interrumpiendo la ejecución de un programa, y luego restablecer la ejecución del mismo sin afectarlo directamente. De este modo un programa puede ser interrumpido temporalmente para atender alguna necesidad urgente del computador y luego continuar su ejecución como si nada hubiera pasado.
-Generalmente se aplica para realizar tareas elementales asincrónicas en el computador tales como responder al teclado, escribir en la pantalla, leer y escribir archivos. Podemos considerar una tarea asincrónica como aquella que es solicitada sin previo aviso y aleatoriamente desde el punto de vista del computador. Tomemos el caso de la operación Ctrl-Alt-Supr. En Windows tiene el efecto de que aparece en pantalla una lista de los procesos y ventanas en ejecución en el computador. En cambio en el Sistema Operativo DOS cuando el usuario presiona simultáneamente dichas teclas el computador procede a reinicializarse, aunque pueda estar ocupado ejecutando un programa en ese instante. Vale decir fuerza obligadamente a que el computador se reinicialice. Ya sea en el sistema Windows o en DOS, el computador no está constantemente monitoreando el teclado para ver si el usuario ha solicitado un Ctrl-Alt-Del, ya que en ese caso consumiría mucho tiempo de proceso en ello y por ende la capacidad de proceso se vería significativamente afectada. La solución empleada es una interrupción.
+Generalmente se aplica para realizar tareas elementales asincrónicas en el computador tales como responder al teclado, escribir en la pantalla, leer y escribir archivos. Podemos considerar una tarea asincrónica como aquella que es solicitada sin previo aviso y aleatoriamente desde el punto de vista del computador.  [3]
 
-Luego cada vez que el usuario presiona una tecla, la CPU es advertida a través de una señal especial de interrupción. Cuando la CPU advierte/recibe una señal de interrupción suspende temporalmente el proceso actual almacenando en memoria RAM un bloque con toda la información necesaria para restablecer posteriormente la ejecución del programa si es que procede. Enseguida la CPU determina qué elemento ha solicitado la interrupción y para cada caso existe un bloque de instrucciones que realiza la tarea correspondiente que es ejecutada a continuación. Terminada la ejecución se restablece el programa original en el mismo punto en que fue interrumpido usando para ello la información almacenada previamente.
+\section{INICIOS}
 
-Cada interrupción tiene asignada un número único. El PC está diseñado de manera que la interrupción tiene asignada 4 bytes de memoria RAM. La dirección de los cuatro bytes en la memoria corresponde al número de la interrupción multiplicado por 4. Por ejemplo la interrupción IRQ 5 tiene asignada 4 bytes en la dirección 0x00014 (0000:0014). El contenido de los 4 bytes de memoria RAM asignados a una interrupción contiene a su vez una dirección que es un puntero a un bloque de instrucciones de máquina que realiza el procedimiento correspondiente. De este modo al iniciar la ejecución de una interrupción de los cuatro bytes que tiene asignados se obtiene la dirección del bloque de instrucciones que efectivamente se ejecutan. Por ejemplo si en la dirección 0000:0014 estuviera almacenado el valor 0xFFF00, ello significa que en dicha dirección (ó (F000:FF00) se encuentra el bloque de instrucciones a ejecutar cuando la interrupción IRQ 5 sea requerida. [2]
-
-Un punto importante a considerar es qué hacer si el dispositivo entra en un ciclo interminable, pero el usuario no desea hacer algo tan drástico como apagar el micro o darle un reset, sino que desea que continúe haciendo su trabajo normal. Para esos casos, los microprocesadores cuentan con una o más señales de interrupción (INT), que como su nombre lo indica, cuando se aplican al dispositivo éste detiene lo que esté haciendo en ese momento y se dirige a una dirección de memoria preestablecida, donde deberán estar programadas las instrucciones adecuadas para que el micro recobre su estado de control normal. [3]
-
-Todos los dispositivos que deseen comunicarse con el procesador por medio de interrupciones deben tener asignada una línea única capaz de avisar al CPU cuando le requiere para realizar una operación. Esta línea se denomina IRQ.
-Las IRQ son líneas que llegan al controlador de interrupciones, un componente de hardware dedicado a la gestión de las interrupciones, y que puede estar integrado en el procesador principal o ser un circuito separado conectado al mismo. El controlador de interrupciones debe ser capaz de habilitar o inhibir las líneas de interrupción y establecer prioridades entre las mismas. Cuando varias líneas de petición de interrupción se activan a la vez, el controlador de interrupciones utilizará estas prioridades para escoger la interrupción sobre la que informará al procesador principal. También puede darse el caso de que una rutina de tratamiento de interrupción sea interrumpida para realizar otra rutina de tratamiento de una interrupción de mayor prioridad a la que se estaba ejecutando; aunque hay interrupciones que no se pueden deshabilitar (conocidas como interrupciones no enmascarables o NMI).  [4]
+La primera técnica que se empleó para enviar información al procesador  fue el polling, que consistía en que el propio procesador se encargara de sondear los dispositivos periféricos cada cierto tiempo para averiguar si tenía pendiente alguna comunicación para él. Este método presentaba el inconveniente de ser muy ineficiente, ya que el procesador consumía constantemente tiempo y recursos en realizar estas instrucciones de sondeo. [1]
+El mecanismo de interrupciones fue la solución que permitió al procesador desentenderse de esta problemática, y delegar en el dispositivo periférico la responsabilidad de comunicarse con él cuando lo necesitara.
 
 
 
+\section{TIPOS DE INTERRUPCIONES}
+Existen distintas formas de generar interrupciones a tareas que realice un dispositivo, estas son: \\
+7.1 Interrupciones de hardware: Estas son asíncronas a la ejecución del procesador, es decir, se pueden producir en cualquier momento independientemente de lo que esté haciendo el CPU en ese momento. Las causas que las producen son externas al procesador y a menudo suelen estar ligadas con los distintos dispositivos de entrada o salida. En la mayoría de las CPUs la respuesta a una interrupción consta de los siguientes pasos:
+El dispositivo de hardware genera el pulso o señal de petición de interrupción, el controlador de Interrupciones Programables prioriza la petición de interrupción en relación con las demás peticiones que podrían haberse emitido de forma simultánea (o estar pendientes) y emite la petición de interrupción al procesador; si las interrupciones están habilitadas, la CPU responde con un ciclo de bus de reconocimiento de interrupción; en respuesta al reconocimiento de la CPU, el dispositivo externo (o el PIC si estuviese presente) sitúa un vector de interrupción en el bus de datos; la CPU lee el vector y lo utiliza (posiblemente de forma indirecta) para obtener la dirección de la ISR, la CPU sitúa en la pila el contexto actual  y inhabilita las interrupciones, y salta a la ISR.\\
 
-\section{¿Se puede hablar de la historia de las interrupciones?}
-Las interrupciones surgen de las necesidades que tienen los dispositivos periféricos de enviar información al procesador principal de un sistema de comunicación. 
-La primera técnica que se empleó para esto fue el polling, que consistía en que el propio procesador se encargara de sondear los dispositivos periféricos cada cierto tiempo para averiguar si tenía pendiente alguna comunicación para él. Este método presentaba el inconveniente de ser muy ineficiente, ya que el procesador consumía constantemente tiempo y recursos en realizar estas instrucciones de sondeo.[4]
+7.2 Interrupciones por software: Las interrupciones por software son aquellas generadas por un programa en ejecución. Para generarlas, existen distintas instrucciones en el código máquina que permiten al programador producir una interrupción, las cuales suelen tener nemotécnicos tales como INT.
+En general actúan de la siguiente manera:
+Un programa en ejecución llega a una instrucción que requiere del sistema operativo para alguna tarea, por ejemplo para leer un archivo en el disco duro. En ese momento llama al sistema y se interrumpe virtualmente hasta recibir respuesta. Durante esa espera las instrucciones que se ejecutarán no serán del programa, sino del sistema operativo. Una vez éste termine su rutina ordenará reanudar la ejecución del programa interrumpido que estaba en espera y este se reanuda. \\
+7.3 Excepciones: Son aquellas que se producen de forma síncrona a la ejecución del procesador y por tanto podrían predecirse si se analiza con detenimiento. Normalmente son causadas al realizarse operaciones no permitidas tales como la división entre cero o el acceso a una posición de memoria no permitida, etc. [1]
 
-El mecanismo de interrupciones fue la solución que permitió al procesador desentenderse de esta problemática, y delegar en el dispositivo periférico la responsabilidad de comunicarse con él cuando lo necesitara. El procesador, en este caso, no sondea a ningún dispositivo, sino que queda a la espera de que estos le avisen (le "interrumpan") cuando tengan algo que comunicarle (ya sea un evento, una transferencia de información, una condición de error, etc.).
-
-Puede parecer, pero las interrupciones no son malas. Se utilizan para rectificar algún error o hacer algo tan simple como leer un movimiento de tecla o mouse. Sí, puedes escribir en tu computadora porque se produce una interrupción al presionar una tecla. Cuando la CPU recibe la señal, le pide al sistema operativo que la grabe. Las interrupciones son la razón por la cual las computadoras modernas pueden realizar múltiples tareas. [5]
-
-
-Permite al SO utilizar la CPU en servicio de una aplicación, mientras la otra queda a la espera de que concluya una operación en un dispositivos E/S
-
-
-
-
-\section{¿Que tipo de interrupciones existen?}
-Interrupciones de hardware: Estas son asíncronas a la ejecución del procesador, es decir, se pueden producir en cualquier momento independientemente de lo que esté haciendo el CPU en ese momento. Las causas que las producen son externas al procesador y a menudo suelen estar ligadas con los distintos dispositivos de entrada o salida.
-Excepciones: Son aquellas que se producen de forma síncrona a la ejecución del procesador y por tanto podrían predecirse si se analiza con detenimiento la traza del programa que en ese momento estaba siendo ejecutado en la CPU. Normalmente son causadas al realizarse operaciones no permitidas tales como la división entre 0, el desbordamiento, el acceso a una posición de memoria no permitida, etc.
-Interrupciones por software: Las interrupciones por software son aquellas generadas por un programa en ejecución. Para generarlas, existen distintas instrucciones en el código máquina que permiten al programador producir una interrupción, las cuales suelen tener nemotécnicos tales como INT (por ejemplo, en DOS se realiza la instrucción INT 0x21 y en Unix se utiliza INT 0x80 para hacer llamadas de sistema). [4]
-
-
-
-
-\section{¿Cómo se hace la implementación de interrupciones a nivel de hardware?}
+\section{APLICACIÓN}
+Las interrupciones de hardware, también conocidas como INT0 e INT1, llaman a una rutina de servicio de interrupción cuando algo sucede con uno de los pines asociados.[4]  
+EJEMPLO:
+Se implementará una interrupción de hardware en arduino a través de un interruptor; en cuanto el pin 2 detecta una subida de voltaje, apaga el LED conectado al pin 12 y enciende el conectado al pin 13. Se usa attachInterrupt () y un delay para poder evidenciar el cambio, pues este sucede en cuestión de microsegundos y no es posible percibirlo.
+\\
+El circuito y código correspondiente al ejemplo podrá visualizarse al ingresar al siguiente link: \\
+(https://www.tinkercad.com/things/3UKhRgfGfcR)
+\section{ANÁLISIS}
+Las interrupciones se utilizan para rectificar algún error o hacer algo tan simple como leer un movimiento de tecla o mouse. Cuando la CPU recibe la señal, le pide al sistema operativo que la grabe. Las interrupciones son la razón por la cual las computadoras modernas pueden realizar múltiples tareas. [5] \\
+El número de interrupciones de hardware está limitado por el número de solicitud de interrupción (IRQ) líneas al procesador, pero puede haber cientos de diferentes interrupciones de software.
 
 
 
+\section{BIBLIOGRAFÍA}
 
+[1] Interrupción, (2020, 28 de junio), Wikipedia, La enciclopedia libre.      
+[2] Microcontrolador vs Microprocesador, (2015,29 de marzo), Wordpress, aprendiendo arduino. 
+[3] Interrupciones, (2009, 15 de marzo), CSL-UNEFA
+[4] Interruociones (2018), Wordpress, aprendiendo arduino. 
+[5] “interrupciones del sistema” en mi PC con Windows 10, (2018,07), 1000 tips informáticos.
 
-
-
-\section{¿Cómo se implementan las interrupciones por software? Debe quedar claro si el lenguaje de programación importa y si el hardware usado afecta.}
-
-
-
-
-
-
-\section{Mostrar un ejemplo de interrupción usando la plataforma Arduino. El ejemplo debe ser implementado por usted, sino tiene el Arduino físico puede hacerlo a nivel de simulación. Adjuntar código fuente de la implementación en Arduino}
-
-
-
-
-\section{REFERENCIAS}
-[1] https://www.ecured.cu/Microprocesador 
-[2] https://logica-reptilia.blogspot.com/2009/03/interrupciones.html
-[3] http://www.aliat.org.mx/BibliotecasDigitales/sistemas/Microprocesadores.pdf
-[4] https://es.wikipedia.org/wiki/Interrupci%C3%B3n
-[5] https://www.1000tipsinformaticos.com/2018/07/que-hace-el-proceso-interrupciones-del-sistema-en-windows.html 
-[6] https://sites.google.com/site/lgiao2018/unidad-1/1-4-el-concepto-de-interrupciones
-[7]
-[8]
 
 
 \end{document}
